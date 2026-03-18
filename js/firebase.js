@@ -1,7 +1,8 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js'
 import {
   getDatabase,
-  ref
+  ref,
+  remove
 } from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js'
 
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -25,13 +26,17 @@ export const getAll = async () => {
   const response = await fetch(url)
   if (!response.ok) throw new Error(response.status)
   const messages = await response.json()
+  console.log(messages)
   return messages
 }
-getAll()
 
 export const postMessage = async () => {
-  const newMessage = ''
-  console.log(newMessage)
+  const newMessage = {
+    message: 'hello',
+    name: 'Charlie',
+    likes: 0,
+    dislikes: 0
+  }
   const options = {
     method: 'POST',
     body: JSON.stringify(newMessage),
@@ -46,4 +51,18 @@ export const postMessage = async () => {
   console.log(newID.name)
 
   return { id: newID.name, newMessage }
+}
+getAll()
+
+export const deleteMessagebyId = async (id) => {
+
+const singleMessageRef = ref(db,`${id}/messages`)
+try {
+  await remove(singleMessageRef)
+console.log('message deleted')
+} catch(err) {
+  console.error('message not deleted')
+throw err
+}
+     
 }

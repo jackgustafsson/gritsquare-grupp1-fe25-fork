@@ -1,0 +1,75 @@
+:root {
+	/* Default theme colors */
+	--theme-first-color: #93e4c1;
+	--theme-second-color: #3baea0;
+	--theme-third-color: #118a7e;
+	--theme-fourth-color: #1f6f78;
+
+	/* Dark theme colors */
+	--dark-first-color: #27296d;
+	--dark-second-color: #5e63b6;
+	--dark-third-color: #a393eb;
+	--dark-fourth-color: #f5c7f7;
+
+	/* Flower theme colors */
+	--flower-first-color: #f92a82;
+	--flower-second-color: #fde549;
+	--flower-third-color: #3d2eaf;
+	--flower-fourth-color: #ff7433;
+	--flower-fifth-color: #c585b3;
+
+	/* Active palette (currently set to flower colors) */
+	--first-color: var(--flower-first-color);
+	--second-color: var(--flower-second-color);
+	--third-color: var(--flower-third-color);
+	--fourth-color: var(--flower-fourth-color);
+	--fifth-color: var(--flower-fifth-color);
+}
+*{
+  margin: 0px;
+  padding: 0px;
+}
+body{
+background-color: var(--theme-first-color);  
+}
+
+.first-color {
+	background: var(--first-color);
+}
+
+.second-color {
+	background: var(--second-color);
+}
+
+.third-color {
+	background: var(--third-color);
+}
+
+.fourth-color {
+	background: var(--fourth-color);
+}
+
+.fifth-color {
+	background: var(--fifth-color);
+}
+#garden{
+  width: 100%;
+  height: 200px;
+  background-color: var(--theme-second-color);
+}
+
+.fith-color{
+    background: #c585b3;
+}
+
+.garden-wrapper{
+
+}
+
+.sky-wrapper{
+    margin: 0;
+    background-image: url(../img/skybackground.png);
+    height: 340px;
+    object-fit: fill;
+}
+
