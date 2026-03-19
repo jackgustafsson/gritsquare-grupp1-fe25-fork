@@ -47,8 +47,19 @@ export const renderHeader = links => {
     if (window.innerWidth > 600) {
       const randomTop = Math.random() * 40
       const randomLeft = Math.random() * 80
+      const randomDuration = (8 + Math.random() * 8).toFixed(2)
+      const randomDelay = -(Math.random() * 8).toFixed(2)
       anchor.style.top = randomTop + '%'
       anchor.style.left = randomLeft + '%'
+      anchor.style.setProperty('--cloud-duration', `${randomDuration}s`)
+      anchor.style.setProperty('--cloud-delay', `${randomDelay}s`)
+      // Unique random path for each anchor
+      for (let i = 0; i <= 4; i++) {
+        const x = (Math.random() * 24 - 12).toFixed(2)
+        const y = (Math.random() * 40 - 20).toFixed(2)
+        anchor.style.setProperty(`--cx${i}`, `${x}vw`)
+        anchor.style.setProperty(`--cy${i}`, `${y}px`)
+      }
       anchor.style.paddingBo = '20px'
     }
 

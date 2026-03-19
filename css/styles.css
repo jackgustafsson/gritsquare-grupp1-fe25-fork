@@ -53,7 +53,7 @@
 	height: min(340px, 45vw);
 	min-height: 220px;
 	background-size: cover;
-	background-position: center;
+	background-position: bottom;
 	background-repeat: no-repeat;
 	color: black;
 }
