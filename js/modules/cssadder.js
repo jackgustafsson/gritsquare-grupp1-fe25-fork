@@ -3,8 +3,22 @@ export function addStyling () {
     window.location.pathname.toLowerCase().includes('/sites/')
 
   const basePath = isInSitesFolder() ? '../css/' : './css/'
+  const fontHref =
+    'https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap'
 
   const cssFiles = ['styles.css', 'footer.css', 'header.css', 'formstyling.css']
+
+  const existingFont = document.head.querySelector(
+    `link[data-google-font="pixelify-sans"]`
+  )
+
+  if (!existingFont) {
+    const fontLink = document.createElement('link')
+    fontLink.rel = 'stylesheet'
+    fontLink.href = fontHref
+    fontLink.dataset.googleFont = 'pixelify-sans'
+    document.head.append(fontLink)
+  }
 
   return Promise.all(
     cssFiles.map(file => {

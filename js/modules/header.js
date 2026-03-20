@@ -17,7 +17,7 @@ const getDefaultLinks = () => {
     { label: 'Messageboard', href: './index.html' },
     { label: 'About', href: './sites/about.html' },
     { label: 'Contact', href: './sites/contact.html' },
-    { label: 'Plant a flower', href: '#' }
+    { label: 'Plant flower', href: '#' }
   ]
 }
 
@@ -38,7 +38,7 @@ export const renderHeader = links => {
   navLinks.forEach(({ label, href }) => {
     const anchor = document.createElement('a')
 
-    if (label === 'Plant a flower') {
+    if (label === 'Plant flower') {
       anchor.addEventListener('click', e => {
         e.preventDefault()
         createFlowerForm()
