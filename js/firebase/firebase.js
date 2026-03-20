@@ -30,12 +30,11 @@ export const getAll = async () => {
   return messages
 }
 
-export const postMessage = async () => {
+export const postMessage = async (message, name, title) => {
   const newMessage = {
-    message: 'hello',
-    name: 'Charlie',
-    likes: 0,
-    dislikes: 0
+    message: message,
+    name: name,
+    title: title
   }
   const options = {
     method: 'POST',
@@ -53,7 +52,8 @@ export const postMessage = async () => {
   return { id: newID.name, newMessage }
 }
 
-export const deleteMessagebyId = async id => {
+export const deleteMessagebyId = async (id) => {
+
   const singleMessageRef = ref(db, `${id}/messages`)
   try {
     await remove(singleMessageRef)

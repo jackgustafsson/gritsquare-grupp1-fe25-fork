@@ -1,4 +1,40 @@
-form input{
+/*form input{
   border: 1px black solid;
   border-radius: 20px;
+}*/
+
+.form-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 10px;
+  z-index: 1000;
+  border: solid 0.1px black;
+  border-radius: 10px;
+  min-width: 50%;
+}
+
+.form-wrapper .cancelBtn {
+  padding: 5px;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.form-wrapper form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+}
+
+.form-wrapper form .sendBtn {
+  display: flex;
+  max-width: 10%;
+  align-self: flex-end;
+  padding: 5px;
 }
