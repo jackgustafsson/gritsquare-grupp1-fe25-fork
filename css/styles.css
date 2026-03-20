@@ -34,16 +34,33 @@
 .garden-wrapper{
 	margin: 0;
 	background-image: url(../img/backgounds/pixelgarden.png);
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
 	height: 800px;
+	position: relative;
+	overflow: hidden;
 	object-fit: contain;
 }
 
 .garden-wrapper-darkmode{
 	margin: 0;
 	background-image: url(../img/backgounds/pixelgarden.png);
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
 	height: 800px;
+	position: relative;
+	overflow: hidden;
 	object-fit: contain;
 	
+}
+
+.garden-flower{
+	position: absolute;
+	width: 64px;
+	height: 64px;
+	object-fit: contain;
 }
 
 .sky-wrapper{

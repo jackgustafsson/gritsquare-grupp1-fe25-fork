@@ -15,7 +15,7 @@ const getDefaultLinks = () => {
     { label: 'Messageboard', href: './index.html' },
     { label: 'About', href: './sites/about.html' },
     { label: 'Contact', href: './sites/contact.html' },
-    { label: 'Plant a flower', href: './sites/contact.html' }
+    { label: 'Plant flower', href: './sites/contact.html' }
   ]
 }
 
@@ -25,7 +25,6 @@ export const renderHeader = links => {
   const existingHeader = mount.querySelector('[data-generated-header="true"]')
   if (existingHeader) return existingHeader
 
-  // Determine correct image path based on location
   const imagePath = isInSitesFolder()
     ? '../img/icons/pixlecloud.png'
     : 'img/icons/pixlecloud.png'
@@ -55,7 +54,7 @@ export const renderHeader = links => {
       anchor.style.left = randomLeft + '%'
       anchor.style.setProperty('--cloud-duration', `${randomDuration}s`)
       anchor.style.setProperty('--cloud-delay', `${randomDelay}s`)
-      // Unique random path for each anchor
+
       for (let i = 0; i <= 4; i++) {
         const x = (Math.random() * 24 - 12).toFixed(2)
         const y = (Math.random() * 40 - 20).toFixed(2)
