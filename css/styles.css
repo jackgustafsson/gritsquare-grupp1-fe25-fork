@@ -34,16 +34,82 @@
 .garden-wrapper{
 	margin: 0;
 	background-image: url(../img/backgounds/pixelgarden.png);
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
 	height: 800px;
+	position: relative;
+	overflow: hidden;
 	object-fit: contain;
 }
 
 .garden-wrapper-darkmode{
 	margin: 0;
 	background-image: url(../img/backgounds/pixelgarden.png);
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
 	height: 800px;
+	position: relative;
+	overflow: hidden;
 	object-fit: contain;
 	
+}
+
+.garden-flower{
+	position: absolute;
+	width: 64px;
+	height: 64px;
+	object-fit: contain;
+	cursor: pointer;
+}
+
+#flower-popup {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.55);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+}
+
+.flower-popup-box {
+	background: #fff;
+	border-radius: 12px;
+	padding: 24px;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 12px;
+	box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+}
+
+.flower-popup-box img {
+	width: 160px;
+	height: 160px;
+	object-fit: contain;
+}
+
+.flower-popup-name {
+	margin: 0;
+	font-size: 1.1rem;
+}
+
+.flower-popup-message {
+	margin: 0;
+	text-align: center;
+	max-width: 240px;
+}
+
+.flower-popup-close {
+	align-self: flex-end;
+	background: none;
+	border: none;
+	font-size: 1.2rem;
+	cursor: pointer;
+	line-height: 1;
 }
 
 .sky-wrapper{
