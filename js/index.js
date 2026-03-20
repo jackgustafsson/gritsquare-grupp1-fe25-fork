@@ -5,4 +5,4 @@ import { addStyling } from './modules/cssadder.js'
 
 initHeaderOnLoad()
 addStyling()
-getAll().then(() => renderPost())
+//getAll().then(() => renderPost())
