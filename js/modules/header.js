@@ -52,7 +52,9 @@ export const renderHeader = links => {
    if (label === 'Search') {
       anchor.addEventListener('click', e => {
         e.preventDefault()
+        if(!document.querySelector('#searchForm'))
         searchUser()
+     
       })
     }
 
