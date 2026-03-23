@@ -1,4 +1,5 @@
 import { createFlowerForm } from './messageForm.js'
+import { searchUser } from '../search.js'
 
 const isInSitesFolder = () =>
   window.location.pathname.toLowerCase().includes('/sites/')
@@ -17,7 +18,8 @@ const getDefaultLinks = () => {
     { label: 'Messageboard', href: './index.html' },
     { label: 'About', href: './sites/about.html' },
     { label: 'Contact', href: './sites/contact.html' },
-    { label: 'Plant flower', href: '#' }
+    { label: 'Plant flower', href: '#' },
+     { label: 'Search', href: '#' }
   ]
 }
 
@@ -46,6 +48,14 @@ export const renderHeader = links => {
         createFlowerForm()
       })
     }
+
+   if (label === 'Search') {
+      anchor.addEventListener('click', e => {
+        e.preventDefault()
+        searchUser()
+      })
+    }
+
 
     const background = document.createElement('img')
     const p = document.createElement('p')
