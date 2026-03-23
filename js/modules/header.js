@@ -1,4 +1,5 @@
 import { createFlowerForm } from './messageForm.js'
+import { logout, getUsername, initUsernamePrompt } from './username.js'
 
 const isInSitesFolder = () =>
   window.location.pathname.toLowerCase().includes('/sites/')
@@ -39,7 +40,34 @@ export const renderHeader = links => {
   header.dataset.generatedHeader = 'true'
 
   const nav = document.createElement('nav')
+
+  // Create hamburger menu first so buttons can be added to it
+  const menuContent = createMenu(header)
+
+  // Add logout link at the end if user is logged in
+  const username = getUsername()
+  if (username) {
+    navLinks.push({ label: 'Logout', href: '#' })
+  }
+
   navLinks.forEach(({ label, href }) => {
+    // Create Logout as a button instead of a cloud
+    if (label === 'Logout') {
+      const button = document.createElement('button')
+      button.textContent = 'Logout'
+      button.addEventListener('click', e => {
+        e.preventDefault()
+        logout()
+        const existingOverlay = document.querySelector(
+          '#username-prompt-overlay'
+        )
+        if (existingOverlay) existingOverlay.remove()
+        initUsernamePrompt()
+      })
+      menuContent.append(button)
+      return
+    }
+
     const anchor = document.createElement('a')
 
     if (label === 'Plant flower') {
@@ -49,15 +77,12 @@ export const renderHeader = links => {
       })
     }
 
-   if (label === 'Search') {
+    if (label === 'Search') {
       anchor.addEventListener('click', e => {
         e.preventDefault()
-        if(!document.querySelector('#searchForm'))
-        searchUser()
-     
+        if (!document.querySelector('#searchForm')) searchUser()
       })
     }
-
 
     const background = document.createElement('img')
     const p = document.createElement('p')
@@ -111,6 +136,34 @@ export const renderHeader = links => {
   }
 
   return header
+}
+
+function createMenu (header) {
+  const menuContainer = document.createElement('div')
+  menuContainer.className = 'hamburger-menu-container'
+
+  const menuButton = document.createElement('button')
+  menuButton.className = 'hamburger-btn'
+  menuButton.innerHTML = '☰'
+  menuButton.addEventListener('click', e => {
+    e.stopPropagation()
+    menuContent.classList.toggle('open')
+  })
+
+  const menuContent = document.createElement('div')
+  menuContent.className = 'hamburger-menu-content'
+
+  menuContainer.append(menuButton)
+  menuContainer.append(menuContent)
+  header.append(menuContainer)
+
+  document.addEventListener('click', e => {
+    if (!menuContainer.contains(e.target)) {
+      menuContent.classList.remove('open')
+    }
+  })
+
+  return menuContent
 }
 
 export const initHeaderOnLoad = () => {
