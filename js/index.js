@@ -5,6 +5,7 @@ import { initHeaderOnLoad } from './modules/header.js'
 import { addStyling } from './modules/cssadder.js'
 import { initAnimalControl } from './modules/animal.js'
 import { initTheme } from './modules/theme.js'
+import { searchUser } from './search.js'
 
 async function initPage () {
   initHeaderOnLoad()
