@@ -7,7 +7,8 @@ const ANIMAL_GIFS = [
   'pixel-rabbit-rabbit.gif',
   'bee-pixel.gif',
   'fox.gif',
-  'horse.gif'
+  'horse.gif',
+  'squrril.gif'
 ]
 
 const basePath = isInSitesFolder() ? '../img/animals' : './img/animals'
