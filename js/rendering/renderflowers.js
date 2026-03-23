@@ -5,6 +5,8 @@ const basePath = isInSitesFolder() ? '../img/flowers' : './img/flowers'
 
 const DEFAULT_FLOWER_IMAGE = `${basePath}/redFlower.png`
 const FLOWER_SIZE = 64
+const FLOWER_COLLISION_GAP = 6
+const FLOWER_POSITIONS_STORAGE_KEY = 'flower-fixed-positions-v1'
 const FLOWER_IMAGES = [
   `${basePath}/blueFlower.png`,
   `${basePath}/greenFlower.png`,
@@ -18,7 +20,161 @@ function clamp (value, min, max) {
   return Math.min(Math.max(value, min), max)
 }
 
-function enableFlowerDragging (flower, garden) {
+function hashString (value) {
+  let hash = 0
+  for (let i = 0; i < value.length; i++) {
+    hash = (hash * 31 + value.charCodeAt(i)) >>> 0
+  }
+  return hash
+}
+
+function getFixedFlowerPosition (garden, seedValue) {
+  const maxLeft = Math.max(garden.clientWidth - FLOWER_SIZE, 0)
+  const maxTop = Math.max(garden.clientHeight - FLOWER_SIZE, 0)
+  const seed = hashString(seedValue)
+
+  const left = maxLeft > 0 ? seed % (maxLeft + 1) : 0
+  const top = maxTop > 0 ? Math.floor(seed / 97) % (maxTop + 1) : 0
+
+  return {
+    left: `${left}px`,
+    top: `${top}px`
+  }
+}
+
+function isOverlappingFlowers (left, top, existingFlowers) {
+  const right = left + FLOWER_SIZE
+  const bottom = top + FLOWER_SIZE
+
+  return existingFlowers.some(({ left: existingLeft, top: existingTop }) => {
+    const existingRight = existingLeft + FLOWER_SIZE
+    const existingBottom = existingTop + FLOWER_SIZE
+
+    return !(
+      right + FLOWER_COLLISION_GAP <= existingLeft ||
+      left >= existingRight + FLOWER_COLLISION_GAP ||
+      bottom + FLOWER_COLLISION_GAP <= existingTop ||
+      top >= existingBottom + FLOWER_COLLISION_GAP
+    )
+  })
+}
+
+function getExistingFlowerPositions (garden) {
+  return Array.from(garden.querySelectorAll('.garden-flower')).map(flower => ({
+    left: parseFloat(flower.style.left || '0'),
+    top: parseFloat(flower.style.top || '0')
+  }))
+}
+
+function findNonOverlappingPosition (garden, preferredPosition, positionSeed) {
+  const maxLeft = Math.max(garden.clientWidth - FLOWER_SIZE, 0)
+  const maxTop = Math.max(garden.clientHeight - FLOWER_SIZE, 0)
+  const existingFlowers = getExistingFlowerPositions(garden)
+  const seed = hashString(positionSeed)
+
+  const preferredLeft = clamp(
+    parseFloat(preferredPosition.left || '0'),
+    0,
+    maxLeft
+  )
+  const preferredTop = clamp(
+    parseFloat(preferredPosition.top || '0'),
+    0,
+    maxTop
+  )
+
+  if (!isOverlappingFlowers(preferredLeft, preferredTop, existingFlowers)) {
+    return { left: preferredLeft, top: preferredTop }
+  }
+
+  const attempts = Math.max(existingFlowers.length * 20, 200)
+
+  for (let i = 0; i < attempts; i++) {
+    const left = maxLeft > 0 ? (seed + i * 131) % (maxLeft + 1) : 0
+    const top = maxTop > 0 ? (Math.floor(seed / 97) + i * 73) % (maxTop + 1) : 0
+
+    if (!isOverlappingFlowers(left, top, existingFlowers)) {
+      return { left, top }
+    }
+  }
+
+  return { left: preferredLeft, top: preferredTop }
+}
+
+function getStoredFlowerPositions () {
+  try {
+    const raw = window.localStorage.getItem(FLOWER_POSITIONS_STORAGE_KEY)
+    if (!raw) {
+      return {}
+    }
+
+    const parsed = JSON.parse(raw)
+    if (parsed && typeof parsed === 'object') {
+      return parsed
+    }
+  } catch {
+    return {}
+  }
+
+  return {}
+}
+
+function getSavedFlowerPosition (positionSeed) {
+  const positions = getStoredFlowerPositions()
+  const saved = positions[positionSeed]
+
+  if (!saved || typeof saved !== 'object') {
+    return null
+  }
+
+  if (typeof saved.left !== 'number' || typeof saved.top !== 'number') {
+    return null
+  }
+
+  return saved
+}
+
+function saveFlowerPosition (positionSeed, left, top) {
+  const positions = getStoredFlowerPositions()
+  positions[positionSeed] = { left, top }
+  window.localStorage.setItem(
+    FLOWER_POSITIONS_STORAGE_KEY,
+    JSON.stringify(positions)
+  )
+}
+
+function resolveFlowerPosition (garden, positionSeed) {
+  const maxLeft = Math.max(garden.clientWidth - FLOWER_SIZE, 0)
+  const maxTop = Math.max(garden.clientHeight - FLOWER_SIZE, 0)
+  const savedPosition = getSavedFlowerPosition(positionSeed)
+
+  if (savedPosition) {
+    return {
+      left: `${clamp(savedPosition.left, 0, maxLeft)}px`,
+      top: `${clamp(savedPosition.top, 0, maxTop)}px`
+    }
+  }
+
+  const preferredPosition = getFixedFlowerPosition(garden, positionSeed)
+  const nonOverlappingPosition = findNonOverlappingPosition(
+    garden,
+    preferredPosition,
+    positionSeed
+  )
+
+  saveFlowerPosition(
+    positionSeed,
+    nonOverlappingPosition.left,
+    nonOverlappingPosition.top
+  )
+
+  return {
+    left: `${nonOverlappingPosition.left}px`,
+    top: `${nonOverlappingPosition.top}px`
+  }
+}
+
+function enableFlowerDragging (flower, garden, onDragEnd = null) {
   let pointerId = null
   let startPointerX = 0
   let startPointerY = 0
@@ -69,6 +225,13 @@ function enableFlowerDragging (flower, garden) {
       flower.releasePointerCapture(pointerId)
     }
 
+    if (didDrag && onDragEnd) {
+      onDragEnd(
+        parseFloat(flower.style.left || '0'),
+        parseFloat(flower.style.top || '0')
+      )
+    }
+
     pointerId = null
   }
 
@@ -82,7 +245,11 @@ function enableFlowerDragging (flower, garden) {
   }
 }
 
-export function renderFlower (imageSrc = DEFAULT_FLOWER_IMAGE, data = null) {
+export function renderFlower (
+  imageSrc = DEFAULT_FLOWER_IMAGE,
+  data = null,
+  positionSeed = 'flower-default'
+) {
   const garden =
     document.getElementById('garden') ??
     document.querySelector('.garden-wrapper')
@@ -92,10 +259,7 @@ export function renderFlower (imageSrc = DEFAULT_FLOWER_IMAGE, data = null) {
   }
 
   const flower = document.createElement('img')
-  const maxLeft = Math.max(garden.clientWidth - FLOWER_SIZE, 0)
-  const maxTop = Math.max(garden.clientHeight - FLOWER_SIZE, 0)
-  const randomLeft = `${Math.floor(Math.random() * (maxLeft + 1))}px`
-  const randomTop = `${Math.floor(Math.random() * (maxTop + 1))}px`
+  const fixedPosition = resolveFlowerPosition(garden, positionSeed)
 
   flower.src = imageSrc
   flower.alt = 'Flower'
@@ -104,8 +268,8 @@ export function renderFlower (imageSrc = DEFAULT_FLOWER_IMAGE, data = null) {
   flower.style.position = 'absolute'
   flower.style.width = `${FLOWER_SIZE}px`
   flower.style.height = `${FLOWER_SIZE}px`
-  flower.style.left = randomLeft
-  flower.style.top = randomTop
+  flower.style.left = fixedPosition.left
+  flower.style.top = fixedPosition.top
   flower.draggable = false
 
   const hoverTitle =
@@ -114,7 +278,9 @@ export function renderFlower (imageSrc = DEFAULT_FLOWER_IMAGE, data = null) {
       : 'Untitled post'
   flower.title = hoverTitle
 
-  const consumeDragState = enableFlowerDragging(flower, garden)
+  const consumeDragState = enableFlowerDragging(flower, garden, (left, top) => {
+    saveFlowerPosition(positionSeed, left, top)
+  })
 
   garden.append(flower)
   flower.addEventListener('click', () => {
@@ -198,12 +364,16 @@ function openFlowerPopup (imageSrc, data) {
 
 export function renderFlowers (data = null) {
   const renderedFlowers = []
-  const entries = data ? Object.values(data) : new Array(12).fill(null)
+  const entries = data
+    ? Object.entries(data)
+    : new Array(12)
+        .fill(null)
+        .map((entry, index) => [`placeholder-${index}`, entry])
 
-  entries.forEach(entry => {
+  entries.forEach(([entryKey, entry]) => {
     const randomImage =
       FLOWER_IMAGES[Math.floor(Math.random() * FLOWER_IMAGES.length)]
-    const flower = renderFlower(randomImage, entry)
+    const flower = renderFlower(randomImage, entry, String(entryKey))
     console.log(entry)
     if (flower) {
       renderedFlowers.push(flower)
