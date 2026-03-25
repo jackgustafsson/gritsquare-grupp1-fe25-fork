@@ -28,7 +28,7 @@ async function initPage () {
     return
   }
 
-  initUsernamePrompt()
+  await initUsernamePrompt()
   initAnimalControl()
   initCabin()
   const data = await getAll()

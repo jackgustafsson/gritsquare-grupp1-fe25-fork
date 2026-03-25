@@ -334,3 +334,40 @@ html.dark-mode .username-prompt-btn:active {
   cursor: pointer;
   text-decoration: underline;
 }
+
+.terms-prompt-text {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.4;
+}
+
+.terms-prompt-rules {
+  padding-left: 1.1rem;
+  margin: 0;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.terms-prompt-rules li {
+  margin-bottom: 0.35rem;
+}
+
+.terms-prompt-text {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.4;
+}
+
+.terms-prompt-rules {
+  padding-left: 1.1rem;
+  margin: 0;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.terms-prompt-rules li {
+  margin-bottom: 0.35rem;
+}
+
