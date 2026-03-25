@@ -946,3 +946,57 @@ html.dark-mode .garden-grass-hint {
 		font-size: 0.78rem;
 	}
 }
+
+
+
+
+
+/* POP UP TERMS CSS */
+
+
+
+
+
+
+
+/* Button */
+#acceptBtn {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: #ee6c4d ;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#acceptBtn:hover {
+  background: #003554;
+}
+
+
+#declineBtn {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: #ccc;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+#declineBtn:hover {
+  background: #aaa;
+}
+
+.checkbox-container {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkbox-container input {
+  margin-right: 10px;
+}
